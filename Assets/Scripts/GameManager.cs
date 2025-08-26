@@ -7,6 +7,11 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public TextMeshProUGUI moneyText;
 
+
+    [Header("Monster Drops")]
+    public GameObject goldPrefab;
+    public GameObject expPrefab;
+
     [Header("Player Stats")]
     public int money;
     public int level;
@@ -60,4 +65,33 @@ public class GameManager : MonoBehaviour
         currentStage++;
         // spawn monsters or trigger next wave
     }
+
+    public void SpawnLoot(Vector3 position, int goldAmount, int expAmount)
+    {
+        int goldObjects = Mathf.Clamp(goldAmount, 1, 10);
+        int expObjects = Mathf.Clamp(expAmount, 1, 10);
+
+        // Spawn gold
+        if (goldPrefab != null)
+        {
+            int goldPerObject = Mathf.Max(1, goldAmount / goldObjects); 
+            for (int i = 0; i < goldObjects; i++)
+            {
+                GameObject gold = Instantiate(goldPrefab, position, Quaternion.identity);
+                gold.GetComponent<Pickup>().Init(goldPerObject, PickupType.Gold);
+            }
+        }
+
+        // Spawn exp
+        if (expPrefab != null)
+        {
+            int expPerObject = Mathf.Max(1, expAmount / expObjects);
+            for (int i = 0; i < expObjects; i++)
+            {
+                GameObject exp = Instantiate(expPrefab, position, Quaternion.identity);
+                exp.GetComponent<Pickup>().Init(expPerObject, PickupType.Exp);
+            }
+        }
+    }
+
 }

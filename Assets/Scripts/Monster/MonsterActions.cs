@@ -14,7 +14,7 @@ public class MonsterActions : MonoBehaviour, IDamageable
 {
     private Renderer[] rend;
     private Color[] originalColor;
-    [SerializeField] private float flashDuration = 0.5f;
+    [SerializeField] private float flashDuration = 0.2f;
     private StatHandler stats;
     private NavMeshAgent agent;
     private GameObject player;
@@ -23,6 +23,11 @@ public class MonsterActions : MonoBehaviour, IDamageable
     [SerializeField] private float chaseRange = 5f; // distance to start moving toward player
     [SerializeField] private float rotationSpeed = 5f;
     private float lastAttackTime = 0f;
+
+    [Header("Drop loot")]
+    [SerializeField] private int goldAmount = 5;
+    [SerializeField] private int expAmount = 10;
+    [SerializeField] private float dropDelay = 0.5f;
 
     private MonsterState currentState = MonsterState.Idle;
 
@@ -150,6 +155,7 @@ public class MonsterActions : MonoBehaviour, IDamageable
     private void Die()
     {
         Debug.Log($"{gameObject.name} has died!");
+        GameManager.Instance.SpawnLoot(transform.position, goldAmount, expAmount);
         Destroy(gameObject);
     }
 }
