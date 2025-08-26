@@ -2,45 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StatHandler : MonoBehaviour
+public interface IDamageable
 {
-    public ScriptableStats statData;
-    private Dictionary<StatType, float> currentStats = new Dictionary<StatType, float>();
+    void TakeDamage(float damage);
+}
+public class StatHandler : MonoBehaviour, IDamageable
+{
+    [SerializeField] private ScriptableStats baseStats;
 
-    private void Awake()
+    private Dictionary<StatType, float> statValues = new Dictionary<StatType, float>();
+    private float currentHealth;
+
+    void Awake()
     {
-        InitializeStats();
+        foreach (var entry in baseStats.stats)
+        {
+            statValues[entry.StatType] = entry.baseValue;
+        }
+        currentHealth = GetStat(StatType.Health);
     }
 
-    private void InitializeStats()
+    public float GetStat(StatType type)
     {
-        foreach (StatEntry entry in statData.stats)
+        return statValues.ContainsKey(type) ? statValues[type] : 0f;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        float defense = GetStat(StatType.Defense);
+        float finalDamage = Mathf.Max(0, damage - defense);
+        currentHealth -= finalDamage;
+
+        Debug.Log($"{gameObject.name} took {finalDamage} damage. Remaining HP: {currentHealth}");
+
+        if (currentHealth <= 0)
         {
-            currentStats[entry.StatType] = entry.baseValue;
+            Die();
         }
     }
 
-    public float GetStat(StatType statType)
+    private void Die()
     {
-        return currentStats.ContainsKey(statType) ? currentStats[statType] : 0;
+        Debug.Log($"{gameObject.name} has died!");
+        Destroy(gameObject);
     }
-
-    public void ModifyStat(StatType statType, float amount, bool isPermanent = true, float duration = 0)
-    {
-        if (!currentStats.ContainsKey(statType)) return;
-
-        currentStats[statType] += amount;
-
-        if (!isPermanent)
-        {
-            StartCoroutine(RemoveStatAfterDuration(statType, amount, duration));
-        }
-    }
-
-    private IEnumerator RemoveStatAfterDuration(StatType statType, float amount, float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        currentStats[statType] -= amount;
-    }
-
 }
