@@ -1,45 +1,53 @@
 using UnityEngine;
 
-public class PlayerCondition : MonoBehaviour
+public interface IDamageable
+{
+    void TakeDamage(float damage);
+}
+public class PlayerCondition : MonoBehaviour, IDamageable
 {
     public UICondition uiCondition;
     private StatHandler statHandler;
 
-    Condition health { get { return uiCondition.health; } }
+    private Condition health => uiCondition.health;
 
-    private void Start()
+    void Start()
     {
         statHandler = GetComponent<StatHandler>();
-
-        if (uiCondition != null && health != null && statHandler != null)
+        if (statHandler != null && health != null)
         {
-            float maxHP = statHandler.GetStat(StatType.Health);
-            health.SetValues(maxHP, maxHP);
+            // Initialize UI
+            health.SetValues(statHandler.CurrentHealth, statHandler.GetStat(StatType.Health));
         }
     }
 
-    private void Update()
+    void Update()
     {
-        if (health != null && health.curValue <= 0f)
-        {
+        if (statHandler == null || health == null) return;
+
+        // Update UI
+        health.curValue = statHandler.CurrentHealth;
+
+        // Die if health is 0
+        if (statHandler.CurrentHealth <= 0f)
             Die();
-        }
-    }
-
-    public void Heal(float amount)
-    {
-        if (health != null)
-            health.Add(amount);
     }
 
     public void TakeDamage(float amount)
     {
-        if (health != null)
-            health.Subtract(amount);
+        if (statHandler != null)
+            statHandler.TakeDamage(amount);
     }
 
-    public void Die()
+    public void Heal(float amount)
+    {
+        if (statHandler != null)
+            statHandler.Heal(amount);
+    }
+
+    private void Die()
     {
         Debug.Log("플레이어가 죽었다.");
     }
 }
+

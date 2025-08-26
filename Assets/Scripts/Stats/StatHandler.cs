@@ -1,25 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
-public interface IDamageable
-{
-    void TakeDamage(float damage);
-}
-public class StatHandler : MonoBehaviour, IDamageable
+public class StatHandler : MonoBehaviour
 {
     [SerializeField] private ScriptableStats baseStats;
 
     private Dictionary<StatType, float> statValues = new Dictionary<StatType, float>();
-    private float currentHealth;
+
+    // True current health
+    public float CurrentHealth { get; private set; }
 
     void Awake()
     {
         foreach (var entry in baseStats.stats)
-        {
             statValues[entry.StatType] = entry.baseValue;
-        }
-        currentHealth = GetStat(StatType.Health);
+
+        CurrentHealth = GetStat(StatType.Health);
     }
 
     public float GetStat(StatType type)
@@ -30,20 +26,16 @@ public class StatHandler : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         float defense = GetStat(StatType.Defense);
-        float finalDamage = Mathf.Max(0, damage - defense);
-        currentHealth -= finalDamage;
+        float finalDamage = Mathf.Max(0f, damage - defense);
 
-        Debug.Log($"{gameObject.name} took {finalDamage} damage. Remaining HP: {currentHealth}");
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
+        CurrentHealth -= finalDamage;
+        CurrentHealth = Mathf.Max(CurrentHealth, 0f); // Clamp to zero
+        Debug.Log($"{gameObject.name} took {finalDamage} damage! Remaining HP: {CurrentHealth}");
     }
 
-    private void Die()
+    public void Heal(float amount)
     {
-        Debug.Log($"{gameObject.name} has died!");
-        Destroy(gameObject);
+        CurrentHealth += amount;
+        CurrentHealth = Mathf.Min(CurrentHealth, GetStat(StatType.Health)); // Clamp to max
     }
 }
