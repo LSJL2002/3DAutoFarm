@@ -1,3 +1,4 @@
+using Microsoft.Unity.VisualStudio.Editor;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -5,7 +6,12 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    [Header("UI")]
+    public LevelBar levelBar;
+
+    [Header("Money and Exp")]
     public TextMeshProUGUI moneyText;
+    public TextMeshProUGUI levelText;
 
 
     [Header("Monster Drops")]
@@ -16,6 +22,7 @@ public class GameManager : MonoBehaviour
     public int money;
     public int level;
     public float exp;
+    private int requiredExp;
 
     [Header("Stage Info")]
     public int currentStage;
@@ -36,7 +43,13 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        if (moneyText == null)
+            moneyText = GameObject.Find("MoneyText")?.GetComponent<TextMeshProUGUI>();
+        if (levelText == null)
+            levelText = GameObject.Find("LevelText")?.GetComponent<TextMeshProUGUI>();
+
         moneyText.text = money.ToString();
+        levelText.text = level.ToString();
     }
 
     public void AddMoney(int amount)
@@ -48,7 +61,15 @@ public class GameManager : MonoBehaviour
     public void AddExp(float amount)
     {
         exp += amount;
-        // handle level up if exp >= requiredExp
+    }
+
+    public void Levelup()
+    {
+        if (exp >= requiredExp)
+        {
+            exp -= requiredExp;
+            level += 1;
+        }
     }
 
     public void MonsterDefeated()

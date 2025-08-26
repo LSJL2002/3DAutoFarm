@@ -20561,7 +20561,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_972
+      name: LevelBox
       rect:
         serializedVersion: 2
         x: 704
@@ -21897,6 +21897,7 @@ TextureImporter:
       Coin: -658005323
       Coin1: 2141025777
       Coin2: 1826171887
+      LevelBox: -2129917657
       UI_0: 33983290
       UI_1: -1583352823
       UI_10: -743450757
@@ -22899,7 +22900,6 @@ TextureImporter:
       UI_97: -1183160415
       UI_970: 868749252
       UI_971: -1957679791
-      UI_972: -2129917657
       UI_973: -1424867830
       UI_974: 1769765410
       UI_975: 2023766038

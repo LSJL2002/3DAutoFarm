@@ -9,7 +9,7 @@ public class Pickup : MonoBehaviour
     private Transform player;
 
     private Vector3 explodeDir;
-    private float explodeTime = 0.3f; // time to scatter before magnet
+    private float explodeTime = 0.5f; // time to scatter before magnet
     private float magnetSpeed = 10f; 
     private float timer;
 
@@ -20,8 +20,8 @@ public class Pickup : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
         // random explosion direction
-        explodeDir = Random.insideUnitSphere * 2f; 
-        explodeDir.y = 0.5f; // add some upward motion
+        explodeDir = Random.insideUnitSphere * 3f; 
+        explodeDir.y = 2f; // add some upward motion
     }
 
     void Update()
