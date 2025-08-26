@@ -1243,6 +1243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a90ef99a38fc6a04d8e91df2a4df9e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelBar: {fileID: 1910955248}
   moneyText: {fileID: 2087206069}
   levelText: {fileID: 1143439808}
   goldPrefab: {fileID: 6480390814861660979, guid: db49e00e1c6699a4a80fe909f00b9c72, type: 3}
@@ -1662,6 +1663,7 @@ GameObject:
   - component: {fileID: 1910955245}
   - component: {fileID: 1910955247}
   - component: {fileID: 1910955246}
+  - component: {fileID: 1910955248}
   m_Layer: 5
   m_Name: LevelBar
   m_TagString: Untagged
@@ -1727,6 +1729,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1910955244}
   m_CullTransparentMesh: 1
+--- !u!114 &1910955248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910955244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4389a42285fe9d24a9a7e2cd342807d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curValue: 0
+  maxValue: 0
+  levelBar: {fileID: 2045273359}
 --- !u!1 &1970882001
 GameObject:
   m_ObjectHideFlags: 0

@@ -47,6 +47,8 @@ public class GameManager : MonoBehaviour
             moneyText = GameObject.Find("MoneyText")?.GetComponent<TextMeshProUGUI>();
         if (levelText == null)
             levelText = GameObject.Find("LevelText")?.GetComponent<TextMeshProUGUI>();
+        if (levelBar == null)
+            levelBar = GameObject.Find("LevelBar")?.GetComponent<LevelBar>();
 
         moneyText.text = money.ToString();
         levelText.text = level.ToString();
@@ -61,17 +63,31 @@ public class GameManager : MonoBehaviour
     public void AddExp(float amount)
     {
         exp += amount;
+        UpdateLevelBar();
+
+        if (exp >= requiredExp)
+            Levelup();
     }
 
     public void Levelup()
     {
-        if (exp >= requiredExp)
+        while (exp >= requiredExp)
         {
             exp -= requiredExp;
             level += 1;
+            levelText.text = level.ToString();
+            requiredExp = CalculateRequiredExp(level);
+        }
+        UpdateLevelBar();
+    }
+    private void UpdateLevelBar()
+    {
+        if (levelBar != null)
+        {
+            levelBar.curValue = exp;
+            levelBar.maxValue = requiredExp;
         }
     }
-
     public void MonsterDefeated()
     {
         monstersRemaining--;
@@ -80,7 +96,10 @@ public class GameManager : MonoBehaviour
             NextStage();
         }
     }
-
+    private int CalculateRequiredExp(int currentLevel)
+    {
+        return 100 + currentLevel * 20;
+    }
     void NextStage()
     {
         currentStage++;
