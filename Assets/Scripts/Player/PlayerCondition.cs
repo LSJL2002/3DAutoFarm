@@ -14,10 +14,15 @@ public class PlayerCondition : MonoBehaviour, IDamageable
     void Start()
     {
         statHandler = GetComponent<StatHandler>();
-        if (statHandler != null && health != null)
+        if (statHandler != null)
         {
-            // Initialize UI
-            health.SetValues(statHandler.CurrentHealth, statHandler.GetStat(StatType.Health));
+            // Ensure CurrentHealth is max at start
+            statHandler.CurrentHealth = statHandler.GetStat(StatType.Health);
+
+            if (health != null)
+            {
+                health.SetValues(statHandler.CurrentHealth, statHandler.GetStat(StatType.Health));
+            }
         }
     }
 

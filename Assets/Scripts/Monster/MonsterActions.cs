@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,6 +12,9 @@ public enum MonsterState
 
 public class MonsterActions : MonoBehaviour, IDamageable
 {
+    private Renderer[] rend;
+    private Color[] originalColor;
+    [SerializeField] private float flashDuration = 0.5f;
     private StatHandler stats;
     private NavMeshAgent agent;
     private GameObject player;
@@ -27,10 +32,16 @@ public class MonsterActions : MonoBehaviour, IDamageable
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
 
-        if (stats != null && agent != null)
+        rend = GetComponentsInChildren<Renderer>();
+        originalColor = new Color[rend.Length];
+        for (int i = 0; i < rend.Length; i++)
         {
-            agent.speed = stats.GetStat(StatType.Speed);
+            originalColor[i] = rend[i].material.color;
         }
+        if (stats != null && agent != null)
+            {
+                agent.speed = stats.GetStat(StatType.Speed);
+            }
     }
 
     void Update()
@@ -55,7 +66,6 @@ public class MonsterActions : MonoBehaviour, IDamageable
                 break;
 
             case MonsterState.Chasing:
-                agent.isStopped = false;
                 MoveTowardsPlayer();
                 RotateTowards(player.transform.position);
                 break;
@@ -70,12 +80,13 @@ public class MonsterActions : MonoBehaviour, IDamageable
 
     private void MoveTowardsPlayer()
     {
-        Vector3 direction = (player.transform.position - transform.position).normalized;
-        Vector3 stopPosition = player.transform.position - direction * attackRange;
+        if (player == null || agent == null) return;
 
-        if (Vector3.Distance(agent.destination, stopPosition) > 0.1f)
-            agent.SetDestination(stopPosition);
+        agent.isStopped = false;
+        bool result = agent.SetDestination(player.transform.position);
+        Debug.Log($"{gameObject.name} SetDestination result: {result}, agent.remainingDistance: {agent.remainingDistance}");
     }
+
 
     private void RotateTowards(Vector3 targetPosition)
     {
@@ -97,8 +108,9 @@ public class MonsterActions : MonoBehaviour, IDamageable
             PlayerCondition playerCondition = player.GetComponent<PlayerCondition>();
             if (playerCondition != null)
             {
+                Debug.Log("AttackPlayer");
                 float damage = stats.GetStat(StatType.Damage);
-                playerCondition.TakeDamage(damage);
+                playerCondition.TakeDamage(damage); // this reduces player's CurrentHealth
                 Debug.Log($"{gameObject.name} attacked {player.name} for {damage} damage!");
             }
             lastAttackTime = Time.time;
@@ -112,6 +124,26 @@ public class MonsterActions : MonoBehaviour, IDamageable
         {
             stats.TakeDamage(damage);
             Debug.Log($"{gameObject.name} took {damage} damage! Remaining HP: {stats.CurrentHealth}");
+        }
+
+        StartCoroutine(FlashRed());
+
+        if (stats.CurrentHealth <= 0f)
+        {
+            Die();
+        }
+    }
+
+    private IEnumerator FlashRed()
+    {
+        for (int i = 0; i < rend.Length; i++)
+        {
+            rend[i].material.color = Color.red;
+        }
+        yield return new WaitForSeconds(flashDuration);
+        for (int i = 0; i < rend.Length; i++)
+        {
+            rend[i].material.color = originalColor[i];
         }
     }
 

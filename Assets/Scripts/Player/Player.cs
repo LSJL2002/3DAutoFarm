@@ -10,5 +10,8 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         CharacterManager.Instance.Player = this;
+
+        if (condition == null)
+            condition = GetComponent<PlayerCondition>();
     }
 }

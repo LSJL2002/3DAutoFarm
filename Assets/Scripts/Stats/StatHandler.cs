@@ -8,7 +8,7 @@ public class StatHandler : MonoBehaviour
     private Dictionary<StatType, float> statValues = new Dictionary<StatType, float>();
 
     // True current health
-    public float CurrentHealth { get; private set; }
+    public float CurrentHealth { get; set; }
 
     void Awake()
     {

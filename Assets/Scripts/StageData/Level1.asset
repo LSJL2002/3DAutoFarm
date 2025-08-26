@@ -9,16 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1842b49c6b8afc34e91101a6e5478fd9, type: 3}
-  m_Name: TestEnemy
+  m_Script: {fileID: 11500000, guid: cca7be41ffce3b34ca19f48fbd7d7ff6, type: 3}
+  m_Name: Level1
   m_EditorClassIdentifier: 
-  characterName: Goblin
-  stats:
-  - StatType: 0
-    baseValue: 20
-  - StatType: 3
-    baseValue: 1
-  - StatType: 4
-    baseValue: 10
-  - StatType: 2
-    baseValue: 3
+  mosnters:
+  - {fileID: 7757242975762623503, guid: 8e8b402495bb7ae40be3204f126017af, type: 3}
+  monsterCount: 0a000000
+  moneyReward: 100
+  expReward: 100
+  stageName: Stage 1
