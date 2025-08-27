@@ -50,6 +50,16 @@ public class PlayerCondition : MonoBehaviour, IDamageable
             statHandler.Heal(amount);
     }
 
+    public void FullRecover()
+    {
+        if (statHandler != null)
+        {
+            statHandler.CurrentHealth = statHandler.GetStat(StatType.Health);
+            if (health != null)
+                health.SetValues(statHandler.CurrentHealth, statHandler.GetStat(StatType.Health));
+        }
+    }
+
     private void Die()
     {
         Debug.Log("플레이어가 죽었다.");

@@ -18944,7 +18944,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_895
+      name: Exp
       rect:
         serializedVersion: 2
         x: 1008
@@ -19343,7 +19343,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_914
+      name: Bag
       rect:
         serializedVersion: 2
         x: 928
@@ -21894,9 +21894,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      Bag: -464269092
       Coin: -658005323
       Coin1: 2141025777
       Coin2: 1826171887
+      Exp: -1822723885
       LevelBox: -2129917657
       UI_0: 33983290
       UI_1: -1583352823
@@ -22814,7 +22816,6 @@ TextureImporter:
       UI_892: 481258158
       UI_893: 1195161520
       UI_894: 1018894724
-      UI_895: -1822723885
       UI_896: -1409645661
       UI_897: -971250750
       UI_898: -1114240413
@@ -22836,7 +22837,6 @@ TextureImporter:
       UI_911: -1029696000
       UI_912: 1860329339
       UI_913: 580700165
-      UI_914: -464269092
       UI_915: 1984684612
       UI_916: 521989781
       UI_917: 691746224

@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI moneyText;
     public TextMeshProUGUI levelText;
 
+    [Header("Monster and Stage Number")]
+    public TextMeshProUGUI monsterLeftText;
+    public TextMeshProUGUI stageNumberText;
 
     [Header("Monster Drops")]
     public GameObject goldPrefab;
@@ -22,11 +25,13 @@ public class GameManager : MonoBehaviour
     public int money;
     public int level;
     public float exp;
-    private int requiredExp;
+    private int requiredExp = 100;
 
     [Header("Stage Info")]
     public int currentStage;
     public int monstersRemaining;
+
+    private StageManager stageManager;
 
     void Awake()
     {
@@ -43,6 +48,15 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        stageManager = FindObjectOfType<StageManager>();
+
+        if (stageManager != null)
+        {
+            stageManager.OnStageUpdated += UpdateStageInfo;
+            // Optional: update UI initially
+            UpdateStageInfo(stageManager.CurrentStageIndex + 1, stageManager.MonstersRemaining);
+        }
+
         if (moneyText == null)
             moneyText = GameObject.Find("MoneyText")?.GetComponent<TextMeshProUGUI>();
         if (levelText == null)
@@ -52,6 +66,15 @@ public class GameManager : MonoBehaviour
 
         moneyText.text = money.ToString();
         levelText.text = level.ToString();
+    }
+
+    private void UpdateStageInfo(int stageNumber, int monstersLeft)
+    {
+        currentStage = stageNumber;
+        monstersRemaining = monstersLeft;
+
+        stageNumberText.text = $"Stage: {stageNumber}";
+        monsterLeftText.text = $"Monsters: {monstersLeft}";
     }
 
     public void AddMoney(int amount)
@@ -88,22 +111,9 @@ public class GameManager : MonoBehaviour
             levelBar.maxValue = requiredExp;
         }
     }
-    public void MonsterDefeated()
-    {
-        monstersRemaining--;
-        if (monstersRemaining <= 0)
-        {
-            NextStage();
-        }
-    }
     private int CalculateRequiredExp(int currentLevel)
     {
         return 100 + currentLevel * 20;
-    }
-    void NextStage()
-    {
-        currentStage++;
-        // spawn monsters or trigger next wave
     }
 
     public void SpawnLoot(Vector3 position, int goldAmount, int expAmount)
@@ -133,5 +143,4 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
 }

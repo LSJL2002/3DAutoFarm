@@ -20,14 +20,14 @@ public class MonsterActions : MonoBehaviour, IDamageable
     private GameObject player;
 
     [SerializeField] private float attackRange = 2f;
-    [SerializeField] private float chaseRange = 5f; // distance to start moving toward player
+    [SerializeField] private float chaseRange = 5f;
     [SerializeField] private float rotationSpeed = 5f;
     private float lastAttackTime = 0f;
 
     [Header("Drop loot")]
     [SerializeField] private int goldAmount = 5;
     [SerializeField] private int expAmount = 10;
-    [SerializeField] private float dropDelay = 0.5f;
+    private StageManager stageManager;
 
     private MonsterState currentState = MonsterState.Idle;
 
@@ -36,6 +36,7 @@ public class MonsterActions : MonoBehaviour, IDamageable
         stats = GetComponent<StatHandler>();
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
+        stageManager = FindObjectOfType<StageManager>();
 
         rend = GetComponentsInChildren<Renderer>();
         originalColor = new Color[rend.Length];
@@ -89,7 +90,6 @@ public class MonsterActions : MonoBehaviour, IDamageable
 
         agent.isStopped = false;
         bool result = agent.SetDestination(player.transform.position);
-        Debug.Log($"{gameObject.name} SetDestination result: {result}, agent.remainingDistance: {agent.remainingDistance}");
     }
 
 
@@ -113,10 +113,8 @@ public class MonsterActions : MonoBehaviour, IDamageable
             PlayerCondition playerCondition = player.GetComponent<PlayerCondition>();
             if (playerCondition != null)
             {
-                Debug.Log("AttackPlayer");
                 float damage = stats.GetStat(StatType.Damage);
                 playerCondition.TakeDamage(damage); // this reduces player's CurrentHealth
-                Debug.Log($"{gameObject.name} attacked {player.name} for {damage} damage!");
             }
             lastAttackTime = Time.time;
         }
@@ -128,7 +126,6 @@ public class MonsterActions : MonoBehaviour, IDamageable
         if (stats != null)
         {
             stats.TakeDamage(damage);
-            Debug.Log($"{gameObject.name} took {damage} damage! Remaining HP: {stats.CurrentHealth}");
         }
 
         StartCoroutine(FlashRed());
@@ -154,8 +151,14 @@ public class MonsterActions : MonoBehaviour, IDamageable
 
     private void Die()
     {
-        Debug.Log($"{gameObject.name} has died!");
         GameManager.Instance.SpawnLoot(transform.position, goldAmount, expAmount);
-        Destroy(gameObject);
+        if (stageManager != null)
+        {
+            stageManager.MonsterDefeated(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }

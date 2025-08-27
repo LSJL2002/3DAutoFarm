@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cca7be41ffce3b34ca19f48fbd7d7ff6, type: 3}
-  m_Name: Level1
+  m_Name: Level2
   m_EditorClassIdentifier: 
-  stagePrefab: {fileID: 7239598754443052973, guid: 766583e92264c1341839673d2d5a11e6, type: 3}
+  stagePrefab: {fileID: 4843535889969412514, guid: 02b60ae2caf5c2743bbc4ccf0ab651bf, type: 3}
   mosnters:
   - {fileID: 7757242975762623503, guid: 8e8b402495bb7ae40be3204f126017af, type: 3}
-  monsterCount: 04000000
-  moneyReward: 100
-  expReward: 100
-  stageName: Stage 1
+  monsterCount: 05000000
+  moneyReward: 0
+  expReward: 0
+  stageName: Level2

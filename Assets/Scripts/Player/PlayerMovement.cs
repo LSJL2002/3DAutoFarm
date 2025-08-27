@@ -92,7 +92,6 @@ public class PlayerMovement : MonoBehaviour
         {
             float damage = stats.GetStat(StatType.Damage);
             damageable.TakeDamage(damage);
-            Debug.Log($"{gameObject.name} attacked {enemy.name} for {damage} damage!");
         }
     }
 
@@ -113,5 +112,18 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         return nearest;
+    }
+    public void TeleportToSpawn(Transform spawnPoint)
+    {
+        if (agent != null)
+        {
+            agent.Warp(spawnPoint.position);
+            transform.rotation = spawnPoint.rotation; 
+        }
+        else
+        {
+            transform.position = spawnPoint.position;
+            transform.rotation = spawnPoint.rotation;
+        }
     }
 }

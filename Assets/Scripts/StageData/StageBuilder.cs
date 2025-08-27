@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "StageData", menuName = "Game/Stage Data")]
 public class StageBuilder : ScriptableObject
 {
+    [Header("StagePrefab")]
+    public GameObject stagePrefab; 
     [Header("Monster")]
     public GameObject[] mosnters;
     public int[] monsterCount;
