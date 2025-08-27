@@ -38,4 +38,15 @@ public class StatHandler : MonoBehaviour
         CurrentHealth += amount;
         CurrentHealth = Mathf.Min(CurrentHealth, GetStat(StatType.Health)); // Clamp to max
     }
+    public void AddModifier(StatType type, float amount) //For Equipments
+    {
+        if (!statValues.ContainsKey(type)) statValues[type] = 0;
+        statValues[type] += amount;
+    }
+
+    public void RemoveModifier(StatType type, float amount) //When removing equipments
+    {
+        if (!statValues.ContainsKey(type)) return;
+        statValues[type] -= amount;
+    }
 }
