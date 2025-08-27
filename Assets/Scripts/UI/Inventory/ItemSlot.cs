@@ -6,8 +6,11 @@ public class ItemSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 {
     public EquipmentScriptable item;
     public Image icon;
-    [HideInInspector] public Transform originalParent;
-    [HideInInspector] public Vector3 originalPos;
+
+    [HideInInspector] public UIInventory inventory;
+    [HideInInspector] public int index;
+
+    private Image draggedIcon;
 
     public void SetItem(EquipmentScriptable newItem)
     {
@@ -16,37 +19,82 @@ public class ItemSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         icon.enabled = item != null;
     }
 
+    public void Clear()
+    {
+        item = null;
+        icon.sprite = null;
+        icon.enabled = false;
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (item == null) return;
-        originalParent = transform.parent;
-        originalPos = transform.localPosition;
-        transform.SetParent(transform.root); // drag on top of UI
+
+        icon.enabled = false;
+
+        draggedIcon = new GameObject("DraggedIcon", typeof(Image)).GetComponent<Image>();
+        draggedIcon.transform.SetParent(transform.root);
+        draggedIcon.transform.SetAsLastSibling();
+        draggedIcon.sprite = icon.sprite;
+        draggedIcon.rectTransform.sizeDelta = icon.rectTransform.sizeDelta;
+        draggedIcon.raycastTarget = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (item == null) return;
-        transform.position = eventData.position;
+        if (draggedIcon == null) return;
+        draggedIcon.transform.position = eventData.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        transform.SetParent(originalParent);
-        transform.localPosition = originalPos;
+        if (draggedIcon != null) Destroy(draggedIcon.gameObject);
+        icon.enabled = item != null;
     }
 
     public void OnDrop(PointerEventData eventData)
     {
-        var dragged = eventData.pointerDrag?.GetComponent<ItemSlot>();
-        if (dragged == null || dragged == this) return;
-
-        var equipSlot = GetComponent<EquipmentSlot>();
-        if (equipSlot != null && equipSlot.CanEquip(dragged.item))
+        // Drop on another inventory slot
+        var draggedSlot = eventData.pointerDrag?.GetComponent<ItemSlot>();
+        if (draggedSlot != null && draggedSlot != this)
         {
-            var playerStats = CharacterManager.Instance.Player.GetComponent<StatHandler>();
-            equipSlot.Equip(dragged.item, playerStats);
-            dragged.SetItem(null);
+            EquipmentScriptable temp = item;
+            SetItem(draggedSlot.item);
+            draggedSlot.SetItem(temp);
+            inventory.UpdateUI();
+            return;
+        }
+
+        // Drop on an equipment slot
+        var equipSlot = eventData.pointerDrag?.GetComponent<EquipmentSlot>();
+        if (equipSlot != null)
+        {
+            TryEquipToSlot(equipSlot);
+        }
+    }
+
+    private void TryEquipToSlot(EquipmentSlot equipSlot)
+    {
+        if (item == null) return;
+
+        StatHandler stats = CharacterManager.Instance.Player.GetComponent<StatHandler>();
+        if (stats == null) return;
+
+        if (equipSlot.CanEquip(item))
+        {
+            // Unequip current item if exists
+            if (equipSlot.currentItem != null)
+            {
+                SetItem(equipSlot.currentItem); // return to inventory
+            }
+            else
+            {
+                Clear(); // remove item from slot
+            }
+
+            equipSlot.Equip(item, stats);
+
+            inventory.UpdateUI();
         }
     }
 }

@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EquipmentSlot : MonoBehaviour
 {
     public EquipmentType slotType;
     public EquipmentScriptable currentItem;
+    public Image icon; // assign in inspector
 
     public bool CanEquip(EquipmentScriptable item)
     {
@@ -17,13 +19,27 @@ public class EquipmentSlot : MonoBehaviour
 
         currentItem = item;
         ApplyStats(stats, item);
+
+        UpdateIcon();
     }
 
     public void Unequip(StatHandler stats)
     {
         if (currentItem == null) return;
+
         RemoveStats(stats, currentItem);
         currentItem = null;
+
+        UpdateIcon();
+    }
+
+    private void UpdateIcon()
+    {
+        if (icon != null)
+        {
+            icon.sprite = currentItem != null ? currentItem.icon : null;
+            icon.enabled = currentItem != null;
+        }
     }
 
     private void ApplyStats(StatHandler stats, EquipmentScriptable item)

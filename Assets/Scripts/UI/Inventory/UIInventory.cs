@@ -3,26 +3,36 @@ using System.Collections.Generic;
 
 public class UIInventory : MonoBehaviour
 {
-    public Transform inventoryGrid;
-    public GameObject itemSlotPrefab;
-    public List<ItemSlot> itemSlots = new List<ItemSlot>();
+    [Header("UI References")]
+    public List<ItemSlot> itemSlots; // assign your 10 pre-placed slots in the inspector
 
-    public void AddItem(EquipmentScriptable item)
+    void Start()
     {
-        ItemSlot slot = itemSlots.Find(s => s.item == null);
-        if (slot == null)
+        // Initialize each slot
+        for (int i = 0; i < itemSlots.Count; i++)
         {
-            GameObject newSlot = Instantiate(itemSlotPrefab, inventoryGrid);
-            slot = newSlot.GetComponent<ItemSlot>();
-            slot.inventory = this;
-            itemSlots.Add(slot);
+            itemSlots[i].inventory = this;
+            itemSlots[i].index = i;
+            itemSlots[i].Clear();
         }
-
-        slot.SetItem(item);
     }
 
-    public void SelectItem(ItemSlot slot)
+    public void AddItem(EquipmentScriptable newItem)
     {
-        // Optional: highlight selected item, show description, etc.
+        // Find first empty slot
+        ItemSlot empty = itemSlots.Find(s => s.item == null);
+        if (empty != null)
+        {
+            empty.SetItem(newItem);
+        }
+        UpdateUI();
+    }
+
+    public void UpdateUI()
+    {
+        foreach (var slot in itemSlots)
+        {
+            slot.icon.enabled = slot.item != null;
+        }
     }
 }
