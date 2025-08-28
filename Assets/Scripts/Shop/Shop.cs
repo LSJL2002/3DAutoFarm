@@ -13,11 +13,15 @@ public class Shop : MonoBehaviour
     public GameObject chestAnimation;
     public List<EquipmentScriptable> equipments;
     public Image itemIcon;
-    public Image itemBorder;
+    public GameObject itemBorder;
+
+    [Header("Item Description")]
+    public TextMeshProUGUI itemDescription;
 
     private EquipmentScriptable rolledEquipment;
+    public UIInventory uiInventory;
 
-    void Start()
+    void Awake()
     {
         chestUI.SetActive(false);
         itemBorder.gameObject.SetActive(false);
@@ -29,7 +33,14 @@ public class Shop : MonoBehaviour
         if (GameManager.Instance.money >= chestCost)
         {
             GameManager.Instance.TakeMoney(chestCost);
+
+            // Reset UI state
             chestUI.SetActive(true);
+            chestAnimation.SetActive(true);
+            itemBorder.gameObject.SetActive(false);
+            itemIcon.gameObject.SetActive(false);
+
+            rolledEquipment = null;
         }
         else
         {
@@ -46,7 +57,16 @@ public class Shop : MonoBehaviour
         chestAnimation.SetActive(false);
         itemBorder.gameObject.SetActive(true);
         itemIcon.gameObject.SetActive(true);
-        
-        Debug.Log($"Got Equipment: {rolledEquipment.displayName} (+{rolledEquipment.boostValue} {rolledEquipment.value})");
+        itemDescription.text = $"{rolledEquipment.displayName}\n\n{rolledEquipment.description}\n{rolledEquipment.value}: {rolledEquipment.boostValue}";
+
+        if (uiInventory != null)
+        {
+            uiInventory.AddItem(rolledEquipment);
+        }
+    }
+
+    public void CollectItemButton()
+    {
+        chestUI.SetActive(false);
     }
 }
