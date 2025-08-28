@@ -9053,7 +9053,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_424
+      name: Close
       rect:
         serializedVersion: 2
         x: 1008
@@ -19364,7 +19364,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_915
+      name: SkillChest
       rect:
         serializedVersion: 2
         x: 944
@@ -19385,7 +19385,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_916
+      name: EquipmentChest
       rect:
         serializedVersion: 2
         x: 960
@@ -21897,15 +21897,18 @@ TextureImporter:
       AtkIcon: 1152205111
       AtkSpeed: -1074596766
       Bag: -464269092
+      Close: 1381045246
       Coin: -658005323
       Coin1: 2141025777
       Coin2: 1826171887
       Defense: 1806601686
       Defense1: 1276796663
+      EquipmentChest: 521989781
       Exp: -1822723885
       Health: 1277955084
       Health1: -1141160106
       LevelBox: -2129917657
+      SkillChest: 1984684612
       Speed: -1483209999
       Speed1: 1821435070
       UI_0: 33983290
@@ -22297,7 +22300,6 @@ TextureImporter:
       UI_421: -288042931
       UI_422: -83423625
       UI_423: -865081701
-      UI_424: 1381045246
       UI_425: 226896465
       UI_426: 570741740
       UI_427: 1451990290
@@ -22837,8 +22839,6 @@ TextureImporter:
       UI_911: -1029696000
       UI_912: 1860329339
       UI_913: 580700165
-      UI_915: 1984684612
-      UI_916: 521989781
       UI_917: 691746224
       UI_918: 1072598929
       UI_919: 423702889

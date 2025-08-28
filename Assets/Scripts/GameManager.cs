@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Money and Exp")]
     public TextMeshProUGUI moneyText;
+    public TextMeshProUGUI moneyTextShop;
     public TextMeshProUGUI levelText;
 
     [Header("Monster and Stage Number")]
@@ -66,6 +67,7 @@ public class GameManager : MonoBehaviour
 
         moneyText.text = money.ToString();
         levelText.text = level.ToString();
+        moneyTextShop.text = money.ToString();
     }
 
     private void UpdateStageInfo(int stageNumber, int monstersLeft)
@@ -81,6 +83,14 @@ public class GameManager : MonoBehaviour
     {
         money += amount;
         moneyText.text = money.ToString();
+        moneyTextShop.text = money.ToString();
+    }
+
+    public void TakeMoney(int amount)
+    {
+        money -= amount;
+        moneyText.text = money.ToString();
+        moneyTextShop.text = money.ToString();
     }
 
     public void AddExp(float amount)
