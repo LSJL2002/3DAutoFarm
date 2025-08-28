@@ -737,7 +737,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_28
+      name: Health
       rect:
         serializedVersion: 2
         x: 512
@@ -758,7 +758,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_29
+      name: Health1
       rect:
         serializedVersion: 2
         x: 528
@@ -6176,7 +6176,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_287
+      name: AtkIcon
       rect:
         serializedVersion: 2
         x: 496
@@ -6302,7 +6302,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_293
+      name: Speed1
       rect:
         serializedVersion: 2
         x: 608
@@ -6323,7 +6323,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_294
+      name: Speed
       rect:
         serializedVersion: 2
         x: 624
@@ -6344,7 +6344,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_295
+      name: AtkSpeed
       rect:
         serializedVersion: 2
         x: 640
@@ -6386,7 +6386,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_297
+      name: Defense1
       rect:
         serializedVersion: 2
         x: 688
@@ -6407,7 +6407,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_298
+      name: Defense
       rect:
         serializedVersion: 2
         x: 704
@@ -21894,12 +21894,20 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      AtkIcon: 1152205111
+      AtkSpeed: -1074596766
       Bag: -464269092
       Coin: -658005323
       Coin1: 2141025777
       Coin2: 1826171887
+      Defense: 1806601686
+      Defense1: 1276796663
       Exp: -1822723885
+      Health: 1277955084
+      Health1: -1141160106
       LevelBox: -2129917657
+      Speed: -1483209999
+      Speed1: 1821435070
       UI_0: 33983290
       UI_1: -1583352823
       UI_10: -743450757
@@ -22136,7 +22144,6 @@ TextureImporter:
       UI_277: 1217192617
       UI_278: -2044592700
       UI_279: -974887252
-      UI_28: 1277955084
       UI_280: 1965177093
       UI_281: 116697397
       UI_282: -1122012751
@@ -22144,19 +22151,12 @@ TextureImporter:
       UI_284: 767528677
       UI_285: -1057861680
       UI_286: 1843405762
-      UI_287: 1152205111
       UI_288: -225210544
       UI_289: 265868333
-      UI_29: -1141160106
       UI_290: -589463096
       UI_291: 93144865
       UI_292: 156088397
-      UI_293: 1821435070
-      UI_294: -1483209999
-      UI_295: -1074596766
       UI_296: 670700341
-      UI_297: 1276796663
-      UI_298: 1806601686
       UI_299: 496217105
       UI_3: -72248689
       UI_30: 1860013047

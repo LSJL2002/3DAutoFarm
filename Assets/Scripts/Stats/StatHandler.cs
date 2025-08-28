@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class StatHandler : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class StatHandler : MonoBehaviour
 
     // True current health
     public float CurrentHealth { get; set; }
+
+    public event Action OnStatChanged;
 
     void Awake()
     {
@@ -30,7 +33,7 @@ public class StatHandler : MonoBehaviour
 
         CurrentHealth -= finalDamage;
         CurrentHealth = Mathf.Max(CurrentHealth, 0f); // Clamp to zero
-        Debug.Log($"{gameObject.name} took {finalDamage} damage! Remaining HP: {CurrentHealth}");
+        OnStatChanged?.Invoke(); //When there is a stat change
     }
 
     public void Heal(float amount)
@@ -42,11 +45,13 @@ public class StatHandler : MonoBehaviour
     {
         if (!statValues.ContainsKey(type)) statValues[type] = 0;
         statValues[type] += amount;
+        OnStatChanged?.Invoke();
     }
 
     public void RemoveModifier(StatType type, float amount) //When removing equipments
     {
         if (!statValues.ContainsKey(type)) return;
         statValues[type] -= amount;
+        OnStatChanged.Invoke();
     }
 }
