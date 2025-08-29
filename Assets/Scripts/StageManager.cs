@@ -8,21 +8,23 @@ public class StageManager : MonoBehaviour
     public Transform stageParent;
     private int currentStageIndex = 0;
     private int stageNumber = 1; // keeps increasing (1,2,3,…)
-    private int loopCount = 0;   // how many times we looped back to index 0
+    private int loopCount = 0; 
     private GameObject activeStage;
     private List<GameObject> activeMonsters = new List<GameObject>();
 
     public int CurrentStageIndex => currentStageIndex;
-    public int CurrentStageNumber => stageNumber; 
+    public int CurrentStageNumber => stageNumber;
     public int MonstersRemaining => activeMonsters.Count;
     public System.Action<int, int> OnStageUpdated;
     private StageClearUI stageClearUI;
-
+    private StageSelectUI stageSelectUI;
     void Start()
     {
         stageClearUI = FindObjectOfType<StageClearUI>();
         if (stageClearUI != null)
             stageClearUI.Init(this);
+
+        stageSelectUI = FindObjectOfType<StageSelectUI>();
 
         LoadStage(currentStageIndex);
     }
@@ -50,7 +52,6 @@ public class StageManager : MonoBehaviour
                 player.TeleportToSpawn(stageSpawn);
         }
 
-        // Spawn monsters with scaling
         SpawnZone[] spawnZones = activeStage.GetComponentsInChildren<SpawnZone>();
         if (spawnZones.Length == 0) return;
 
@@ -99,6 +100,9 @@ public class StageManager : MonoBehaviour
         StageBuilder stageData = stages[currentStageIndex];
         if (stageClearUI != null)
             stageClearUI.ShowRewards(stageData.moneyReward, (int)stageData.expReward);
+
+        if (stageSelectUI != null)
+            stageSelectUI.CreateButton(stageNumber + 1);
     }
 
     public void LoadNextStage()
@@ -118,5 +122,25 @@ public class StageManager : MonoBehaviour
         }
 
         LoadStage(currentStageIndex);
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.currentStage = stageNumber;
     }
+
+    public void LoadStageByNumber(int targetStageNumber)
+    {
+        if (targetStageNumber <= 0) return;
+
+        int index = (targetStageNumber - 1) % stages.Length;
+        int loop = (targetStageNumber - 1) / stages.Length;
+
+        stageNumber = targetStageNumber;
+        currentStageIndex = index;
+        loopCount = loop;
+
+        LoadStage(currentStageIndex);
+        if (GameManager.Instance != null)
+            GameManager.Instance.currentStage = stageNumber;
+    }
+
 }

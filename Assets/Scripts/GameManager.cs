@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     private int requiredExp = 100;
 
     [Header("Stage Info")]
-    public int currentStage;
+    public int currentStage = 1;
     public int monstersRemaining;
 
     private StageManager stageManager;
