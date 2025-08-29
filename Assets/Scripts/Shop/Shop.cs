@@ -17,12 +17,15 @@ public class Shop : MonoBehaviour
 
     [Header("Item Description")]
     public TextMeshProUGUI itemDescription;
-
     private EquipmentScriptable rolledEquipment;
+    [Header("ErrorMessage")]
+    public GameObject errorMessage;
+    public TextMeshProUGUI errorMessageText;
     public UIInventory uiInventory;
 
     void Awake()
     {
+        errorMessage.SetActive(false);
         chestUI.SetActive(false);
         itemBorder.gameObject.SetActive(false);
         itemIcon.gameObject.SetActive(false);
@@ -44,7 +47,7 @@ public class Shop : MonoBehaviour
         }
         else
         {
-            Debug.Log("No Money");
+            NoMoneyLog();
         }
     }
 
@@ -68,5 +71,20 @@ public class Shop : MonoBehaviour
     public void CollectItemButton()
     {
         chestUI.SetActive(false);
+    }
+
+    public void NoMoneyLog()
+    {
+        if (errorMessage != null)
+        {
+            errorMessage.SetActive(false);
+        }
+        errorMessage.SetActive(true);
+        errorMessageText.text = $"Lacking Gold";
+    }
+
+    public void CloseNoMoneyLog()
+    {
+        errorMessage.SetActive(false);
     }
 }

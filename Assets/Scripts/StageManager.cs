@@ -7,10 +7,13 @@ public class StageManager : MonoBehaviour
     public StageBuilder[] stages;
     public Transform stageParent;
     private int currentStageIndex = 0;
+    private int stageNumber = 1; // keeps increasing (1,2,3,…)
+    private int loopCount = 0;   // how many times we looped back to index 0
     private GameObject activeStage;
     private List<GameObject> activeMonsters = new List<GameObject>();
 
     public int CurrentStageIndex => currentStageIndex;
+    public int CurrentStageNumber => stageNumber; 
     public int MonstersRemaining => activeMonsters.Count;
     public System.Action<int, int> OnStageUpdated;
     private StageClearUI stageClearUI;
@@ -28,7 +31,6 @@ public class StageManager : MonoBehaviour
     {
         if (index < 0 || index >= stages.Length) return;
 
-        // Clear previous stage
         if (activeStage != null)
         {
             Destroy(activeStage);
@@ -37,39 +39,29 @@ public class StageManager : MonoBehaviour
             activeMonsters.Clear();
         }
 
-        // Spawn stage prefab
         StageBuilder stageData = stages[index];
         activeStage = Instantiate(stageData.stagePrefab, stageParent);
 
         Transform stageSpawn = activeStage.transform.Find("PlayerSpawn");
-
         if (stageSpawn != null)
         {
             PlayerMovement player = GameObject.FindWithTag("Player")?.GetComponent<PlayerMovement>();
             if (player != null)
-            {
                 player.TeleportToSpawn(stageSpawn);
-                Debug.Log("Teleported player to stage spawn");
-            }
         }
-        else
-        {
-            Debug.LogWarning($"No PlayerSpawn found in stage prefab {stageData.stagePrefab.name}");
-        }
-        // Spawn monsters
+
+        // Spawn monsters with scaling
         SpawnZone[] spawnZones = activeStage.GetComponentsInChildren<SpawnZone>();
-        if (spawnZones.Length == 0)
-        {
-            Debug.LogWarning("No spawn zones found in the stage prefab!");
-            return;
-        }
+        if (spawnZones.Length == 0) return;
 
         for (int i = 0; i < stageData.mosnters.Length; i++)
         {
             GameObject monsterPrefab = stageData.mosnters[i];
-            int count = stageData.monsterCount[i];
 
-            for (int j = 0; j < count; j++)
+            int baseCount = stageData.monsterCount[i];
+            int scaledCount = Mathf.Min(baseCount + loopCount, 15);
+
+            for (int j = 0; j < scaledCount; j++)
             {
                 SpawnZone zone = spawnZones[j % spawnZones.Length];
                 Vector3 spawnPos = GetSpawnPosition(zone);
@@ -78,20 +70,14 @@ public class StageManager : MonoBehaviour
                 activeMonsters.Add(monster);
             }
         }
-
-        // Notify UI
-        OnStageUpdated?.Invoke(currentStageIndex + 1, MonstersRemaining);
+        OnStageUpdated?.Invoke(stageNumber, MonstersRemaining);
     }
 
     private Vector3 GetSpawnPosition(SpawnZone zone)
     {
         Vector3 spawnPos = zone.GetRandomPosition();
-
         if (Physics.Raycast(spawnPos + Vector3.up * 10f, Vector3.down, out RaycastHit hit, 20f))
-        {
             spawnPos.y = hit.point.y;
-        }
-
         return spawnPos;
     }
 
@@ -100,43 +86,37 @@ public class StageManager : MonoBehaviour
         if (activeMonsters.Contains(monster))
         {
             activeMonsters.Remove(monster);
-            OnStageUpdated?.Invoke(currentStageIndex + 1, MonstersRemaining);
+            OnStageUpdated?.Invoke(stageNumber, MonstersRemaining);
             Destroy(monster);
 
             if (activeMonsters.Count == 0)
-            {
                 StageCleared();
-            }
         }
     }
 
     private void StageCleared()
     {
-        Debug.Log("Stage Cleared!");
         StageBuilder stageData = stages[currentStageIndex];
-
-        // Show the UI instead of immediately giving rewards
         if (stageClearUI != null)
-        {
             stageClearUI.ShowRewards(stageData.moneyReward, (int)stageData.expReward);
-        }
     }
+
     public void LoadNextStage()
     {
+        stageNumber++;
         currentStageIndex++;
-        OnStageUpdated?.Invoke(currentStageIndex + 1, MonstersRemaining);
+
+        if (currentStageIndex >= stages.Length)
+        {
+            currentStageIndex = 0;
+            loopCount++;
+        }
+
         if (CharacterManager.Instance.Player != null && CharacterManager.Instance.Player.condition != null)
         {
             CharacterManager.Instance.Player.condition.FullRecover();
         }
 
-        if (currentStageIndex < stages.Length)
-        {
-            LoadStage(currentStageIndex);
-        }
-        else
-        {
-            Debug.Log("All stages cleared!");
-        }
+        LoadStage(currentStageIndex);
     }
 }

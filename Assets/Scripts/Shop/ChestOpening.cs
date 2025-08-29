@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class ChestOpening : MonoBehaviour
 {
-    public Shop shop; 
+    public Shop shop;
     public void OnChestExplodeEvent()
     {
         shop.OnChestExplode();
+    }
+
+    public void OnCloseErrorLog()
+    {
+        shop.CloseNoMoneyLog();
     }
 }

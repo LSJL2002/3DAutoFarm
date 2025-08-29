@@ -9,7 +9,6 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler, IBeginDragHandler, IDr
     public Image icon;
 
     private Image draggedIcon;
-    private bool droppedOnValidSlot;
 
     public bool CanEquip(EquipmentScriptable item)
     {
@@ -105,8 +104,6 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler, IBeginDragHandler, IDr
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (currentItem == null) return;
-
-        droppedOnValidSlot = false;
 
         icon.enabled = false;
 
