@@ -62,7 +62,12 @@ public class PlayerCondition : MonoBehaviour, IDamageable
 
     private void Die()
     {
-        Debug.Log("플레이어가 죽었다.");
+        StageManager stageManager = FindObjectOfType<StageManager>();
+        if (stageManager != null)
+        {
+            stageManager.LoadStage(stageManager.CurrentStageIndex);
+        }
+        FullRecover();
     }
 }
 
